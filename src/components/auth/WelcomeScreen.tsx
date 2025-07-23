@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
+import { Navigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { GraduationCap, Users, MessageCircle, TrendingUp } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 import classroomHero from "@/assets/classroom-hero.jpg";
 
 interface WelcomeScreenProps {
@@ -9,10 +11,16 @@ interface WelcomeScreenProps {
 
 export function WelcomeScreen({ onContinue }: WelcomeScreenProps) {
   const [isVisible, setIsVisible] = useState(false);
+  const { user } = useAuth();
 
   useEffect(() => {
     setIsVisible(true);
   }, []);
+
+  // Redirect if already authenticated
+  if (user) {
+    return <Navigate to="/dashboard" replace />;
+  }
 
   return (
     <div className="min-h-screen bg-gradient-subtle flex items-center justify-center p-4">

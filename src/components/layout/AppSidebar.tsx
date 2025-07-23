@@ -1,8 +1,6 @@
-import { useState } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import {
-  Home, MessageSquare, Calendar, TrendingUp, CheckSquare, 
-  User, Users, PlusCircle, BookOpen, GraduationCap
+  Home, MessageSquare, Calendar, Users, BookOpen, GraduationCap, Settings
 } from "lucide-react";
 import {
   Sidebar,
@@ -13,7 +11,6 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar";
 
@@ -33,23 +30,18 @@ export function AppSidebar({ userRole }: AppSidebarProps) {
   // Common navigation items for all roles
   const commonItems = [
     { title: "Dashboard", url: "/dashboard", icon: Home },
-    { title: "Messages", url: "/messages", icon: MessageSquare },
-    { title: "Events", url: "/events", icon: Calendar },
-    { title: "Performance", url: "/performance", icon: TrendingUp },
-    { title: "Tasks", url: "/tasks", icon: CheckSquare },
-    { title: "Profile", url: "/profile", icon: User },
+    { title: "Classrooms", url: "/dashboard/classrooms", icon: BookOpen },
+    { title: "Messages", url: "/dashboard/messages", icon: MessageSquare },
+    { title: "Calendar", url: "/calendar", icon: Calendar },
   ];
 
   // Role-specific items
   const teacherItems = [
-    { title: "Create Class", url: "/create-class", icon: PlusCircle },
-    { title: "Manage Classes", url: "/manage-classes", icon: Users },
-    { title: "Assignments", url: "/assignments", icon: BookOpen },
+    { title: "Settings", url: "/settings", icon: Settings },
   ];
 
   const studentParentItems = [
-    { title: "Join Class", url: "/join-class", icon: Users },
-    { title: "Attendance", url: "/attendance", icon: CheckSquare },
+    { title: "Settings", url: "/settings", icon: Settings },
   ];
 
   const roleSpecificItems = userRole === "teacher" ? teacherItems : studentParentItems;
@@ -85,13 +77,19 @@ export function AppSidebar({ userRole }: AppSidebarProps) {
               {commonItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <NavLink 
+                    <Link 
                       to={item.url} 
-                      className={getNavClasses(isActive(item.url))}
+                      className={`transition-all duration-200 ${
+                        state === "collapsed" 
+                          ? "justify-center px-2" 
+                          : "justify-start px-3"
+                      } ${location.pathname === item.url ? "bg-accent text-accent-foreground" : ""}`}
                     >
                       <item.icon className="h-4 w-4" />
-                      {!isCollapsed && <span>{item.title}</span>}
-                    </NavLink>
+                      {state !== "collapsed" && (
+                        <span className="ml-3">{item.title}</span>
+                      )}
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
@@ -109,13 +107,19 @@ export function AppSidebar({ userRole }: AppSidebarProps) {
               {roleSpecificItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <NavLink 
+                    <Link 
                       to={item.url} 
-                      className={getNavClasses(isActive(item.url))}
+                      className={`transition-all duration-200 ${
+                        state === "collapsed" 
+                          ? "justify-center px-2" 
+                          : "justify-start px-3"
+                      } ${location.pathname === item.url ? "bg-accent text-accent-foreground" : ""}`}
                     >
                       <item.icon className="h-4 w-4" />
-                      {!isCollapsed && <span>{item.title}</span>}
-                    </NavLink>
+                      {state !== "collapsed" && (
+                        <span className="ml-3">{item.title}</span>
+                      )}
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
