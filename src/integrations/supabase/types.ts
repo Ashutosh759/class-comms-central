@@ -14,7 +14,145 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      classroom_members: {
+        Row: {
+          classroom_id: string
+          id: string
+          joined_at: string
+          role: Database["public"]["Enums"]["user_role"]
+          user_id: string
+        }
+        Insert: {
+          classroom_id: string
+          id?: string
+          joined_at?: string
+          role: Database["public"]["Enums"]["user_role"]
+          user_id: string
+        }
+        Update: {
+          classroom_id?: string
+          id?: string
+          joined_at?: string
+          role?: Database["public"]["Enums"]["user_role"]
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "classroom_members_classroom_id_fkey"
+            columns: ["classroom_id"]
+            isOneToOne: false
+            referencedRelation: "classrooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      classrooms: {
+        Row: {
+          classroom_code: string
+          created_at: string
+          created_by: string
+          id: string
+          name: string
+          subject: string | null
+          updated_at: string
+        }
+        Insert: {
+          classroom_code: string
+          created_at?: string
+          created_by: string
+          id?: string
+          name: string
+          subject?: string | null
+          updated_at?: string
+        }
+        Update: {
+          classroom_code?: string
+          created_at?: string
+          created_by?: string
+          id?: string
+          name?: string
+          subject?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      messages: {
+        Row: {
+          attachment_name: string | null
+          attachment_url: string | null
+          classroom_id: string | null
+          created_at: string
+          id: string
+          message: string
+          message_type: string
+          receiver_id: string | null
+          sender_id: string
+        }
+        Insert: {
+          attachment_name?: string | null
+          attachment_url?: string | null
+          classroom_id?: string | null
+          created_at?: string
+          id?: string
+          message: string
+          message_type: string
+          receiver_id?: string | null
+          sender_id: string
+        }
+        Update: {
+          attachment_name?: string | null
+          attachment_url?: string | null
+          classroom_id?: string | null
+          created_at?: string
+          id?: string
+          message?: string
+          message_type?: string
+          receiver_id?: string | null
+          sender_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_classroom_id_fkey"
+            columns: ["classroom_id"]
+            isOneToOne: false
+            referencedRelation: "classrooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string
+          first_name: string | null
+          id: string
+          last_name: string | null
+          role: Database["public"]["Enums"]["user_role"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
+          role: Database["public"]["Enums"]["user_role"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
+          role?: Database["public"]["Enums"]["user_role"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +161,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      user_role: "student" | "teacher" | "parent"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +288,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      user_role: ["student", "teacher", "parent"],
+    },
   },
 } as const
