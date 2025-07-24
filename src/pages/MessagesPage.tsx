@@ -110,25 +110,37 @@ export default function MessagesPage() {
       if (messagesError) throw messagesError;
       setMessages(enrichedMessages);
 
-      // Fetch classrooms user is member of
-      const { data: membershipData, error: membershipError } = await supabase
-        .from('classroom_members')
-        .select('classroom_id')
-        .eq('user_id', profile.user_id);
-
-      if (membershipError) throw membershipError;
-
-      const classroomIds = membershipData?.map(m => m.classroom_id) || [];
+      // Fetch classrooms user is member of or created
       let classroomsData: Classroom[] = [];
-
-      if (classroomIds.length > 0) {
+      
+      if (profile.role === 'teacher') {
+        // Teachers can see all classrooms
         const { data, error: classroomsError } = await supabase
           .from('classrooms')
-          .select('id, name')
-          .in('id', classroomIds);
+          .select('id, name');
         
         if (classroomsError) throw classroomsError;
         classroomsData = data || [];
+      } else {
+        // Students/parents see only their classrooms
+        const { data: membershipData, error: membershipError } = await supabase
+          .from('classroom_members')
+          .select('classroom_id')
+          .eq('user_id', profile.user_id);
+
+        if (membershipError) throw membershipError;
+
+        const classroomIds = membershipData?.map(m => m.classroom_id) || [];
+
+        if (classroomIds.length > 0) {
+          const { data, error: classroomsError } = await supabase
+            .from('classrooms')
+            .select('id, name')
+            .in('id', classroomIds);
+          
+          if (classroomsError) throw classroomsError;
+          classroomsData = data || [];
+        }
       }
 
       setClassrooms(classroomsData);
