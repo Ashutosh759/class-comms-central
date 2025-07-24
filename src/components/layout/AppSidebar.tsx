@@ -32,7 +32,7 @@ export function AppSidebar({ userRole }: AppSidebarProps) {
     { title: "Dashboard", url: "/dashboard", icon: Home },
     { title: "Classrooms", url: "/dashboard/classrooms", icon: BookOpen },
     { title: "Messages", url: "/dashboard/messages", icon: MessageSquare },
-    { title: "Calendar", url: "/calendar", icon: Calendar },
+    { title: "Calendar", url: "/dashboard/calendar", icon: Calendar },
   ];
 
   // Role-specific items

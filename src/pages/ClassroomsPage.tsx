@@ -38,21 +38,44 @@ export default function ClassroomsPage() {
     if (!profile) return;
 
     try {
-      const { data, error } = await supabase
+      // First get classroom memberships for the user
+      const { data: membershipData, error: membershipError } = await supabase
+        .from('classroom_members')
+        .select('classroom_id')
+        .eq('user_id', profile.user_id);
+
+      if (membershipError) throw membershipError;
+
+      const classroomIds = membershipData?.map(m => m.classroom_id) || [];
+      
+      if (classroomIds.length === 0) {
+        setClassrooms([]);
+        return;
+      }
+
+      // Get classroom details
+      const { data: classroomsData, error: classroomsError } = await supabase
         .from('classrooms')
-        .select(`
-          *,
-          classroom_members!inner(user_id)
-        `)
+        .select('*')
+        .in('id', classroomIds)
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
+      if (classroomsError) throw classroomsError;
 
-      // Count members for each classroom
-      const classroomsWithCounts = data.map(classroom => ({
-        ...classroom,
-        member_count: classroom.classroom_members?.length || 0
-      }));
+      // Get member counts for each classroom
+      const classroomsWithCounts = await Promise.all(
+        (classroomsData || []).map(async (classroom) => {
+          const { count } = await supabase
+            .from('classroom_members')
+            .select('*', { count: 'exact', head: true })
+            .eq('classroom_id', classroom.id);
+          
+          return {
+            ...classroom,
+            member_count: count || 0
+          };
+        })
+      );
 
       setClassrooms(classroomsWithCounts);
     } catch (error) {

@@ -69,34 +69,69 @@ export default function MessagesPage() {
     if (!profile) return;
 
     try {
-      // Fetch messages
+      // Fetch messages without joins first (due to foreign key issues)
       const { data: messagesData, error: messagesError } = await supabase
         .from('messages')
-        .select(`
-          *,
-          sender:profiles!sender_id(first_name, last_name, role),
-          classroom:classrooms(name)
-        `)
+        .select('*')
         .order('created_at', { ascending: false });
 
-      if (messagesError) throw messagesError;
+      let enrichedMessages: Message[] = [];
       
-      // Type assertion to fix the TypeScript error
-      const typedMessages = messagesData as unknown as Message[];
-      setMessages(typedMessages || []);
+      if (messagesData && messagesData.length > 0) {
+        // Get unique sender IDs
+        const senderIds = [...new Set(messagesData.map(m => m.sender_id))];
+        
+        // Fetch sender profiles
+        const { data: sendersData } = await supabase
+          .from('profiles')
+          .select('user_id, first_name, last_name, role')
+          .in('user_id', senderIds);
+
+        // Get unique classroom IDs
+        const classroomIds = [...new Set(messagesData.map(m => m.classroom_id).filter(Boolean))];
+        let classroomsData: any[] = [];
+        
+        if (classroomIds.length > 0) {
+          const { data } = await supabase
+            .from('classrooms')
+            .select('id, name')
+            .in('id', classroomIds);
+          classroomsData = data || [];
+        }
+
+        // Enrich messages with sender and classroom data
+        enrichedMessages = messagesData.map(message => ({
+          ...message,
+          sender: sendersData?.find(s => s.user_id === message.sender_id),
+          classroom: classroomsData?.find(c => c.id === message.classroom_id)
+        })) as Message[];
+      }
+
+      if (messagesError) throw messagesError;
+      setMessages(enrichedMessages);
 
       // Fetch classrooms user is member of
-      const { data: classroomsData, error: classroomsError } = await supabase
-        .from('classrooms')
-        .select(`
-          id,
-          name,
-          classroom_members!inner(user_id)
-        `)
-        .eq('classroom_members.user_id', profile.user_id);
+      const { data: membershipData, error: membershipError } = await supabase
+        .from('classroom_members')
+        .select('classroom_id')
+        .eq('user_id', profile.user_id);
 
-      if (classroomsError) throw classroomsError;
-      setClassrooms(classroomsData || []);
+      if (membershipError) throw membershipError;
+
+      const classroomIds = membershipData?.map(m => m.classroom_id) || [];
+      let classroomsData: Classroom[] = [];
+
+      if (classroomIds.length > 0) {
+        const { data, error: classroomsError } = await supabase
+          .from('classrooms')
+          .select('id, name')
+          .in('id', classroomIds);
+        
+        if (classroomsError) throw classroomsError;
+        classroomsData = data || [];
+      }
+
+      setClassrooms(classroomsData);
 
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -114,18 +149,26 @@ export default function MessagesPage() {
     if (!selectedClassroom) return;
 
     try {
-      const { data, error } = await supabase
+      const { data: membershipData, error: membershipError } = await supabase
         .from('classroom_members')
-        .select(`
-          profiles!inner(user_id, first_name, last_name, role)
-        `)
+        .select('user_id')
         .eq('classroom_id', selectedClassroom);
 
-      if (error) throw error;
+      if (membershipError) throw membershipError;
+
+      const userIds = membershipData?.map(m => m.user_id) || [];
       
-      // Type assertion to fix the TypeScript error
-      const typedMembers = data?.map(member => member.profiles).filter(Boolean) as unknown as Profile[] || [];
-      setClassMembers(typedMembers);
+      if (userIds.length > 0) {
+        const { data: profilesData, error: profilesError } = await supabase
+          .from('profiles')
+          .select('user_id, first_name, last_name, role')
+          .in('user_id', userIds);
+
+        if (profilesError) throw profilesError;
+        setClassMembers(profilesData || []);
+      } else {
+        setClassMembers([]);
+      }
     } catch (error) {
       console.error('Error fetching class members:', error);
     }
