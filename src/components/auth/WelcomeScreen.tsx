@@ -35,7 +35,7 @@ export function WelcomeScreen({ onContinue }: WelcomeScreenProps) {
               <GraduationCap className="h-8 w-8 text-primary-foreground" />
             </div>
             <h1 className="text-4xl lg:text-6xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-              ClassConnect
+              ParentPing
             </h1>
           </div>
           

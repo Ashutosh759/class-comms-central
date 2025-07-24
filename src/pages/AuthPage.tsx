@@ -85,7 +85,7 @@ export default function AuthPage({ onBack }: AuthPageProps) {
               <BookOpen className="h-6 w-6 text-white" />
             </div>
             <div>
-              <CardTitle className="text-2xl">ClassConnect</CardTitle>
+              <CardTitle className="text-2xl">ParentPing</CardTitle>
               <CardDescription>
                 Connect with your classroom community
               </CardDescription>
