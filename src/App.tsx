@@ -9,6 +9,8 @@ import AuthPage from "./pages/AuthPage";
 import DashboardLayout from "./components/layout/DashboardLayout";
 import ClassroomsPage from "./pages/ClassroomsPage";
 import MessagesPage from "./pages/MessagesPage";
+import CalendarPage from "./pages/CalendarPage";
+import DashboardPage from "./pages/DashboardPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -24,9 +26,10 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<AuthPage onBack={() => window.history.back()} />} />
             <Route path="/dashboard" element={<DashboardLayout />}>
-              <Route index element={<div className="p-6"><h1 className="text-3xl font-bold">Dashboard</h1></div>} />
+              <Route index element={<DashboardPage />} />
               <Route path="classrooms" element={<ClassroomsPage />} />
               <Route path="messages" element={<MessagesPage />} />
+              <Route path="calendar" element={<CalendarPage />} />
             </Route>
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
