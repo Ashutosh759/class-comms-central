@@ -42,12 +42,20 @@ interface Profile {
   role: string;
 }
 
+interface Teacher {
+  user_id: string;
+  first_name: string | null;
+  last_name: string | null;
+  role: string;
+}
+
 export default function MessagesPage() {
   const { profile } = useAuth();
   const { toast } = useToast();
   const [messages, setMessages] = useState<Message[]>([]);
   const [classrooms, setClassrooms] = useState<Classroom[]>([]);
   const [classMembers, setClassMembers] = useState<Profile[]>([]);
+  const [teachers, setTeachers] = useState<Teacher[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedClassroom, setSelectedClassroom] = useState<string>('');
   const [selectedReceiver, setSelectedReceiver] = useState<string>('');
@@ -57,6 +65,9 @@ export default function MessagesPage() {
   useEffect(() => {
     fetchData();
     subscribeToMessages();
+    if (profile && (profile.role === 'student' || profile.role === 'parent')) {
+      fetchTeachers();
+    }
   }, [profile]);
 
   useEffect(() => {
@@ -183,6 +194,53 @@ export default function MessagesPage() {
       }
     } catch (error) {
       console.error('Error fetching class members:', error);
+    }
+  };
+
+  const fetchTeachers = async () => {
+    if (!profile || profile.role === 'teacher') return;
+
+    try {
+      // Get user's classrooms first
+      const { data: membershipData, error: membershipError } = await supabase
+        .from('classroom_members')
+        .select('classroom_id')
+        .eq('user_id', profile.user_id);
+
+      if (membershipError) throw membershipError;
+
+      const classroomIds = membershipData?.map(m => m.classroom_id) || [];
+      
+      if (classroomIds.length > 0) {
+        // Get all teacher members from those classrooms
+        const { data: teacherMembersData, error: teacherMembersError } = await supabase
+          .from('classroom_members')
+          .select('user_id')
+          .in('classroom_id', classroomIds)
+          .neq('user_id', profile.user_id);
+
+        if (teacherMembersError) throw teacherMembersError;
+
+        const teacherIds = [...new Set(teacherMembersData?.map(m => m.user_id) || [])];
+        
+        if (teacherIds.length > 0) {
+          // Get teacher profiles
+          const { data: teachersData, error: teachersError } = await supabase
+            .from('profiles')
+            .select('user_id, first_name, last_name, role')
+            .in('user_id', teacherIds)
+            .eq('role', 'teacher');
+
+          if (teachersError) throw teachersError;
+          setTeachers(teachersData || []);
+        } else {
+          setTeachers([]);
+        }
+      } else {
+        setTeachers([]);
+      }
+    } catch (error) {
+      console.error('Error fetching teachers:', error);
     }
   };
 
@@ -393,25 +451,25 @@ export default function MessagesPage() {
                   </div>
                 )}
 
-                {messageType === 'private' && (
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">Recipient</label>
-                    <Select value={selectedReceiver} onValueChange={setSelectedReceiver}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select recipient" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {classMembers
-                          .filter(member => member.user_id !== profile?.user_id)
-                          .map((member) => (
-                            <SelectItem key={member.user_id} value={member.user_id}>
-                              {member.first_name} {member.last_name} ({member.role})
-                            </SelectItem>
-                          ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                )}
+                 {messageType === 'private' && (
+                   <div className="space-y-2">
+                     <label className="text-sm font-medium">Recipient</label>
+                     <Select value={selectedReceiver} onValueChange={setSelectedReceiver}>
+                       <SelectTrigger>
+                         <SelectValue placeholder="Select recipient" />
+                       </SelectTrigger>
+                       <SelectContent>
+                         {(profile?.role === 'teacher' ? classMembers : teachers)
+                           .filter(member => member.user_id !== profile?.user_id)
+                           .map((member) => (
+                             <SelectItem key={member.user_id} value={member.user_id}>
+                               {member.first_name} {member.last_name} ({member.role})
+                             </SelectItem>
+                           ))}
+                       </SelectContent>
+                     </Select>
+                   </div>
+                 )}
 
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Message</label>
