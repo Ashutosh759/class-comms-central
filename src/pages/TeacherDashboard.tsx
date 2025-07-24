@@ -47,11 +47,11 @@ const TeacherDashboard = () => {
   const { user } = useAuth();
   const { toast } = useToast();
   const [stats, setStats] = useState<DashboardStats>({
-    totalClassrooms: 3,
-    totalStudents: 24,
-    totalParents: 18,
-    unreadMessages: 5,
-    upcomingEvents: 4,
+    totalClassrooms: 4,
+    totalStudents: 32,
+    totalParents: 28,
+    unreadMessages: 7,
+    upcomingEvents: 6,
   });
   const [recentMessages, setRecentMessages] = useState<RecentMessage[]>([]);
   const [upcomingEvents, setUpcomingEvents] = useState<UpcomingEvent[]>([]);
@@ -154,24 +154,31 @@ const TeacherDashboard = () => {
     const sampleMessages = [
       {
         id: '1',
-        message: 'Can we schedule a parent-teacher meeting this week?',
+        message: 'Can we schedule a meeting to discuss my child\'s React project progress?',
         sender_name: 'Sarah Johnson',
         created_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-        classroom_name: 'Mathematics 10A',
+        classroom_name: 'Web Development',
       },
       {
         id: '2',
-        message: 'My child missed the assignment deadline due to illness.',
+        message: 'My child is struggling with binary search algorithms. Any extra resources?',
         sender_name: 'Mike Wilson',
         created_at: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(),
-        classroom_name: 'Science 9B',
+        classroom_name: 'Data Structures & Algorithms',
       },
       {
         id: '3',
-        message: 'Thank you for the extra help with algebra!',
+        message: 'Thank you for the MongoDB tutorial! Very helpful.',
         sender_name: 'Emma Davis',
         created_at: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(),
-        classroom_name: 'Mathematics 10A',
+        classroom_name: 'NoSQL Databases',
+      },
+      {
+        id: '4',
+        message: 'When is the next cloud deployment workshop?',
+        sender_name: 'David Chen',
+        created_at: new Date(Date.now() - 8 * 60 * 60 * 1000).toISOString(),
+        classroom_name: 'Cloud Computing',
       }
     ];
 
@@ -183,23 +190,37 @@ const TeacherDashboard = () => {
     const sampleEvents = [
       {
         id: '1',
-        title: 'Math Quiz - Quadratic Equations',
+        title: 'React.js Final Project Presentation',
         event_date: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
         event_type: 'Assessment',
-        classroom_name: 'Mathematics 10A',
+        classroom_name: 'Web Development',
       },
       {
         id: '2',
-        title: 'Science Fair Project Due',
-        event_date: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(),
-        event_type: 'Assignment',
-        classroom_name: 'Science 9B',
+        title: 'Algorithm Complexity Quiz',
+        event_date: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString(),
+        event_type: 'Assessment',
+        classroom_name: 'Data Structures & Algorithms',
       },
       {
         id: '3',
-        title: 'Parent-Teacher Conference',
+        title: 'MongoDB Schema Design Assignment Due',
+        event_date: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(),
+        event_type: 'Assignment',
+        classroom_name: 'NoSQL Databases',
+      },
+      {
+        id: '4',
+        title: 'AWS Deployment Workshop',
         event_date: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
-        event_type: 'Meeting',
+        event_type: 'Workshop',
+        classroom_name: 'Cloud Computing',
+      },
+      {
+        id: '5',
+        title: 'Tech Industry Career Panel',
+        event_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+        event_type: 'Event',
         classroom_name: 'General',
       }
     ];

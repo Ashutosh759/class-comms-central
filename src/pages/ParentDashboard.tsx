@@ -59,11 +59,11 @@ const ParentDashboard = () => {
   const { user } = useAuth();
   const { toast } = useToast();
   const [stats, setStats] = useState<ParentStats>({
-    totalClassrooms: 0,
-    averageGrade: 0,
-    attendanceRate: 0,
-    pendingFees: 0,
-    upcomingEvents: 0,
+    totalClassrooms: 6,
+    averageGrade: 88,
+    attendanceRate: 95,
+    pendingFees: 250,
+    upcomingEvents: 3,
   });
   const [recentGrades, setRecentGrades] = useState<ChildGrade[]>([]);
   const [recentAttendance, setRecentAttendance] = useState<ChildAttendance[]>([]);

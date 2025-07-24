@@ -55,11 +55,11 @@ const StudentDashboard = () => {
   const { user } = useAuth();
   const { toast } = useToast();
   const [stats, setStats] = useState<StudentStats>({
-    totalClassrooms: 5,
-    averageGrade: 87,
-    attendanceRate: 94,
-    pendingFees: 150,
-    upcomingEvents: 3,
+    totalClassrooms: 6,
+    averageGrade: 85,
+    attendanceRate: 92,
+    pendingFees: 250,
+    upcomingEvents: 4,
   });
   const [recentGrades, setRecentGrades] = useState<Grade[]>([]);
   const [recentAttendance, setRecentAttendance] = useState<AttendanceRecord[]>([]);
@@ -178,27 +178,35 @@ const StudentDashboard = () => {
     const sampleGrades = [
       {
         id: '1',
-        assignment_title: 'Algebra Quiz #3',
-        grade: 92,
+        assignment_title: 'React Component Architecture',
+        grade: 94,
         max_grade: 100,
-        classroom_name: 'Mathematics 10A',
+        classroom_name: 'Web Development',
         created_at: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
       },
       {
         id: '2',
-        assignment_title: 'Science Lab Report',
-        grade: 85,
+        assignment_title: 'Binary Tree Implementation',
+        grade: 87,
         max_grade: 100,
-        classroom_name: 'Science 9B',
+        classroom_name: 'Data Structures & Algorithms',
         created_at: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
       },
       {
         id: '3',
-        assignment_title: 'History Essay',
-        grade: 78,
+        assignment_title: 'MongoDB Query Optimization',
+        grade: 91,
         max_grade: 100,
-        classroom_name: 'History 10A',
+        classroom_name: 'NoSQL Databases',
         created_at: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+      },
+      {
+        id: '4',
+        assignment_title: 'REST API Design Project',
+        grade: 88,
+        max_grade: 100,
+        classroom_name: 'Backend Development',
+        created_at: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(),
       }
     ];
 
@@ -212,19 +220,25 @@ const StudentDashboard = () => {
         id: '1',
         date: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString().split('T')[0],
         status: 'present',
-        classroom_name: 'Mathematics 10A',
+        classroom_name: 'Web Development',
       },
       {
         id: '2',
         date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
         status: 'present',
-        classroom_name: 'Science 9B',
+        classroom_name: 'Data Structures & Algorithms',
       },
       {
         id: '3',
         date: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
         status: 'late',
-        classroom_name: 'History 10A',
+        classroom_name: 'NoSQL Databases',
+      },
+      {
+        id: '4',
+        date: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        status: 'present',
+        classroom_name: 'Machine Learning',
       }
     ];
 
@@ -236,19 +250,19 @@ const StudentDashboard = () => {
     const sampleFees = [
       {
         id: '1',
-        fee_type: 'Lab Fee',
-        amount: 75,
+        fee_type: 'Cloud Platform Access',
+        amount: 150,
         due_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
         status: 'unpaid',
-        description: 'Science laboratory usage fee'
+        description: 'AWS/Azure lab environment access'
       },
       {
         id: '2',
-        fee_type: 'Field Trip',
-        amount: 75,
+        fee_type: 'Software License',
+        amount: 100,
         due_date: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
         status: 'unpaid',
-        description: 'History museum visit'
+        description: 'JetBrains IDE license for development'
       }
     ];
 
