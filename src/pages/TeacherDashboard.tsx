@@ -47,11 +47,11 @@ const TeacherDashboard = () => {
   const { user } = useAuth();
   const { toast } = useToast();
   const [stats, setStats] = useState<DashboardStats>({
-    totalClassrooms: 0,
-    totalStudents: 0,
-    totalParents: 0,
-    unreadMessages: 0,
-    upcomingEvents: 0,
+    totalClassrooms: 3,
+    totalStudents: 24,
+    totalParents: 18,
+    unreadMessages: 5,
+    upcomingEvents: 4,
   });
   const [recentMessages, setRecentMessages] = useState<RecentMessage[]>([]);
   const [upcomingEvents, setUpcomingEvents] = useState<UpcomingEvent[]>([]);
@@ -150,57 +150,61 @@ const TeacherDashboard = () => {
   };
 
   const fetchRecentMessages = async () => {
-    const { data } = await supabase
-      .from('messages')
-      .select(`
-        id,
-        message,
-        created_at,
-        classroom_id,
-        classrooms(name),
-        profiles!messages_sender_id_fkey(first_name, last_name)
-      `)
-      .eq('receiver_id', user?.id)
-      .eq('message_type', 'private')
-      .order('created_at', { ascending: false })
-      .limit(5);
+    // Sample data for demonstration
+    const sampleMessages = [
+      {
+        id: '1',
+        message: 'Can we schedule a parent-teacher meeting this week?',
+        sender_name: 'Sarah Johnson',
+        created_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+        classroom_name: 'Mathematics 10A',
+      },
+      {
+        id: '2',
+        message: 'My child missed the assignment deadline due to illness.',
+        sender_name: 'Mike Wilson',
+        created_at: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(),
+        classroom_name: 'Science 9B',
+      },
+      {
+        id: '3',
+        message: 'Thank you for the extra help with algebra!',
+        sender_name: 'Emma Davis',
+        created_at: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(),
+        classroom_name: 'Mathematics 10A',
+      }
+    ];
 
-    const formattedMessages = data?.map((msg: any) => ({
-      id: msg.id,
-      message: msg.message,
-      sender_name: `${msg.profiles?.first_name || ''} ${msg.profiles?.last_name || ''}`.trim(),
-      created_at: msg.created_at,
-      classroom_name: msg.classrooms?.name,
-    })) || [];
-
-    setRecentMessages(formattedMessages);
+    setRecentMessages(sampleMessages);
   };
 
   const fetchUpcomingEvents = async () => {
-    const { data } = await supabase
-      .from('events')
-      .select(`
-        id,
-        title,
-        event_date,
-        event_type,
-        classroom_id,
-        classrooms(name)
-      `)
-      .eq('created_by', user?.id)
-      .gte('event_date', new Date().toISOString())
-      .order('event_date', { ascending: true })
-      .limit(5);
+    // Sample data for demonstration
+    const sampleEvents = [
+      {
+        id: '1',
+        title: 'Math Quiz - Quadratic Equations',
+        event_date: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+        event_type: 'Assessment',
+        classroom_name: 'Mathematics 10A',
+      },
+      {
+        id: '2',
+        title: 'Science Fair Project Due',
+        event_date: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(),
+        event_type: 'Assignment',
+        classroom_name: 'Science 9B',
+      },
+      {
+        id: '3',
+        title: 'Parent-Teacher Conference',
+        event_date: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
+        event_type: 'Meeting',
+        classroom_name: 'General',
+      }
+    ];
 
-    const formattedEvents = data?.map((event: any) => ({
-      id: event.id,
-      title: event.title,
-      event_date: event.event_date,
-      event_type: event.event_type,
-      classroom_name: event.classrooms?.name,
-    })) || [];
-
-    setUpcomingEvents(formattedEvents);
+    setUpcomingEvents(sampleEvents);
   };
 
   if (loading) {

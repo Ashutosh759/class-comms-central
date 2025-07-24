@@ -407,7 +407,7 @@ export default function ClassroomsPage() {
                   <Button 
                     size="sm" 
                     className="flex-1"
-                    onClick={() => {/* Navigate to classroom */}}
+                    onClick={() => window.location.href = `/dashboard/classrooms/${classroom.id}/chat`}
                   >
                     Enter
                   </Button>

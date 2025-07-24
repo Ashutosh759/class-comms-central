@@ -55,11 +55,11 @@ const StudentDashboard = () => {
   const { user } = useAuth();
   const { toast } = useToast();
   const [stats, setStats] = useState<StudentStats>({
-    totalClassrooms: 0,
-    averageGrade: 0,
-    attendanceRate: 0,
-    pendingFees: 0,
-    upcomingEvents: 0,
+    totalClassrooms: 5,
+    averageGrade: 87,
+    attendanceRate: 94,
+    pendingFees: 150,
+    upcomingEvents: 3,
   });
   const [recentGrades, setRecentGrades] = useState<Grade[]>([]);
   const [recentAttendance, setRecentAttendance] = useState<AttendanceRecord[]>([]);
@@ -174,64 +174,85 @@ const StudentDashboard = () => {
   };
 
   const fetchRecentGrades = async () => {
-    const { data } = await supabase
-      .from('grades')
-      .select(`
-        id,
-        assignment_title,
-        grade,
-        max_grade,
-        created_at,
-        classrooms(name)
-      `)
-      .eq('student_id', user?.id)
-      .order('created_at', { ascending: false })
-      .limit(5);
+    // Sample data for demonstration
+    const sampleGrades = [
+      {
+        id: '1',
+        assignment_title: 'Algebra Quiz #3',
+        grade: 92,
+        max_grade: 100,
+        classroom_name: 'Mathematics 10A',
+        created_at: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+      },
+      {
+        id: '2',
+        assignment_title: 'Science Lab Report',
+        grade: 85,
+        max_grade: 100,
+        classroom_name: 'Science 9B',
+        created_at: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+      },
+      {
+        id: '3',
+        assignment_title: 'History Essay',
+        grade: 78,
+        max_grade: 100,
+        classroom_name: 'History 10A',
+        created_at: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+      }
+    ];
 
-    const formattedGrades = data?.map((grade: any) => ({
-      id: grade.id,
-      assignment_title: grade.assignment_title,
-      grade: grade.grade,
-      max_grade: grade.max_grade,
-      classroom_name: grade.classrooms?.name || 'Unknown',
-      created_at: grade.created_at,
-    })) || [];
-
-    setRecentGrades(formattedGrades);
+    setRecentGrades(sampleGrades);
   };
 
   const fetchRecentAttendance = async () => {
-    const { data } = await supabase
-      .from('attendance')
-      .select(`
-        id,
-        date,
-        status,
-        classrooms(name)
-      `)
-      .eq('student_id', user?.id)
-      .order('date', { ascending: false })
-      .limit(5);
+    // Sample data for demonstration
+    const sampleAttendance = [
+      {
+        id: '1',
+        date: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        status: 'present',
+        classroom_name: 'Mathematics 10A',
+      },
+      {
+        id: '2',
+        date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        status: 'present',
+        classroom_name: 'Science 9B',
+      },
+      {
+        id: '3',
+        date: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        status: 'late',
+        classroom_name: 'History 10A',
+      }
+    ];
 
-    const formattedAttendance = data?.map((record: any) => ({
-      id: record.id,
-      date: record.date,
-      status: record.status,
-      classroom_name: record.classrooms?.name || 'Unknown',
-    })) || [];
-
-    setRecentAttendance(formattedAttendance);
+    setRecentAttendance(sampleAttendance);
   };
 
   const fetchPendingFees = async () => {
-    const { data } = await supabase
-      .from('fees')
-      .select('*')
-      .eq('student_id', user?.id)
-      .in('status', ['unpaid', 'overdue'])
-      .order('due_date', { ascending: true });
+    // Sample data for demonstration
+    const sampleFees = [
+      {
+        id: '1',
+        fee_type: 'Lab Fee',
+        amount: 75,
+        due_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        status: 'unpaid',
+        description: 'Science laboratory usage fee'
+      },
+      {
+        id: '2',
+        fee_type: 'Field Trip',
+        amount: 75,
+        due_date: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        status: 'unpaid',
+        description: 'History museum visit'
+      }
+    ];
 
-    setPendingFees(data || []);
+    setPendingFees(sampleFees);
   };
 
   const getAttendanceIcon = (status: string) => {

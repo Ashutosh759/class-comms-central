@@ -11,6 +11,7 @@ import ClassroomsPage from "./pages/ClassroomsPage";
 import MessagesPage from "./pages/MessagesPage";
 import CalendarPage from "./pages/CalendarPage";
 import DashboardPage from "./pages/DashboardPage";
+import ClassroomChatPage from "./pages/ClassroomChatPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,6 +29,7 @@ const App = () => (
             <Route path="/dashboard" element={<DashboardLayout />}>
               <Route index element={<DashboardPage />} />
               <Route path="classrooms" element={<ClassroomsPage />} />
+              <Route path="classrooms/:classroomId/chat" element={<ClassroomChatPage />} />
               <Route path="messages" element={<MessagesPage />} />
               <Route path="calendar" element={<CalendarPage />} />
             </Route>
