@@ -41,7 +41,7 @@ export function WelcomeScreen({ onContinue }: WelcomeScreenProps) {
           
           <p className="text-xl lg:text-2xl text-muted-foreground mb-8 max-w-2xl mx-auto">
             Where teachers, students, and parents connect in real-time. 
-            Your digital classroom assistant for seamless communication.
+            Your communication hub for seamless school collaboration.
           </p>
         </div>
 
@@ -49,7 +49,7 @@ export function WelcomeScreen({ onContinue }: WelcomeScreenProps) {
         <div className="mb-12 relative">
           <img 
             src={classroomHero} 
-            alt="Digital Classroom" 
+            alt="ParentPing - School Communication Platform" 
             className="w-full max-w-3xl mx-auto rounded-2xl shadow-card"
           />
           <div className="absolute inset-0 bg-gradient-primary/10 rounded-2xl"></div>

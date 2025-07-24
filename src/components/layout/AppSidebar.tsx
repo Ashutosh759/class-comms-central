@@ -63,7 +63,7 @@ export function AppSidebar({ userRole }: AppSidebarProps) {
           </div>
           {!isCollapsed && (
             <div>
-              <h2 className="text-lg font-semibold">ClassConnect</h2>
+              <h2 className="text-lg font-semibold">ParentPing</h2>
               <p className="text-xs text-muted-foreground capitalize">{userRole}</p>
             </div>
           )}

@@ -1,4 +1,4 @@
-# Welcome to your Lovable project
+# ParentPing - School Communication Platform
 
 ## Project info
 

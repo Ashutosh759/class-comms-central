@@ -45,7 +45,7 @@ export default function DashboardLayout() {
               <SidebarTrigger className="text-muted-foreground hover:text-foreground">
                 <Menu className="h-5 w-5" />
               </SidebarTrigger>
-              <h1 className="text-lg font-semibold">ClassConnect</h1>
+              <h1 className="text-lg font-semibold">ParentPing</h1>
             </div>
             
             <div className="flex items-center space-x-4">

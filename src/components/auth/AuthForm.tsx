@@ -60,9 +60,9 @@ export function AuthForm({ onBack, onLogin }: AuthFormProps) {
             <div className="bg-gradient-primary p-3 rounded-xl shadow-glow mr-3">
               <GraduationCap className="h-6 w-6 text-primary-foreground" />
             </div>
-            <h1 className="text-2xl font-bold">ClassConnect</h1>
+            <h1 className="text-2xl font-bold">ParentPing</h1>
           </div>
-          <p className="text-muted-foreground">Welcome to your digital classroom</p>
+          <p className="text-muted-foreground">Welcome to ParentPing</p>
         </div>
 
         {/* Auth Tabs */}
@@ -130,7 +130,7 @@ export function AuthForm({ onBack, onLogin }: AuthFormProps) {
             <TabsContent value="signup">
               <CardHeader>
                 <CardTitle>Create Account</CardTitle>
-                <CardDescription>Join your digital classroom</CardDescription>
+                <CardDescription>Join ParentPing today</CardDescription>
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleSignup} className="space-y-4">
